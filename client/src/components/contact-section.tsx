@@ -48,10 +48,8 @@ export function ContactSection() {
 
   const contactMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      return await apiRequest("/api/contact", {
-        method: "POST",
-        body: data,
-      });
+      const response = await apiRequest("POST", "/api/contact", data);
+      return await response.json();
     },
     onSuccess: () => {
       toast({
@@ -215,10 +213,10 @@ export function ContactSection() {
                 <Button 
                   type="submit" 
                   className="w-full py-3 font-semibold" 
-                  disabled={isSubmitting}
+                  disabled={contactMutation.isPending}
                   data-testid="button-submit"
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  {contactMutation.isPending ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </CardContent>

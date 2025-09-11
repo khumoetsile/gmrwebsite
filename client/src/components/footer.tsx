@@ -91,9 +91,21 @@ export function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-background/20 mt-12 pt-8 text-center">
+        <div className="border-t border-background/20 mt-12 pt-8 text-center space-y-2">
           <p className="text-background/80" data-testid="footer-copyright">
             © 2025 GMR Solutions | Domain Registration & Custom Email Services | New Zealand
+          </p>
+          <p className="text-background/60 text-sm">
+            Website Design by{" "}
+            <a 
+              href="https://khumo.co.bw" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-background transition-colors underline"
+              data-testid="footer-designer-link"
+            >
+              Khumo
+            </a>
           </p>
         </div>
       </div>
