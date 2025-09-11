@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { navigateToContactWithData, getPackageInquiryData } from "@/lib/contact-utils";
 
 export function PricingSection() {
   const packages = [
@@ -47,12 +48,27 @@ export function PricingSection() {
     }
   ];
 
-  const handlePackageSelect = (packageName: string) => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  const handlePackageSelect = (packageName: string, price: string) => {
+    const inquiryData = getPackageInquiryData(packageName, price);
+    navigateToContactWithData(inquiryData.subject, inquiryData.message);
   };
 
   const handleEnterpriseContact = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+    const inquiryData = {
+      subject: "Enterprise Plan Inquiry",
+      message: `Hi GMR Solutions,
+
+I'm interested in discussing an enterprise plan for my organization. We have specific requirements that may need a custom solution.
+
+Could you please contact me to discuss:
+- Our current needs and scale
+- Custom pricing options
+- Enterprise features and support
+- Implementation timeline
+
+Thank you!`
+    };
+    navigateToContactWithData(inquiryData.subject, inquiryData.message);
   };
 
   return (
@@ -110,7 +126,7 @@ export function PricingSection() {
                     ? "bg-accent hover:bg-accent/90 text-accent-foreground" 
                     : "bg-primary hover:bg-primary/90 text-primary-foreground"
                 }`}
-                onClick={() => handlePackageSelect(pkg.name)}
+                onClick={() => handlePackageSelect(pkg.name.replace(' Package', ''), `NZD ${pkg.price}`)}
                 data-testid={`button-${pkg.testId}`}
               >
                 {pkg.buttonText}

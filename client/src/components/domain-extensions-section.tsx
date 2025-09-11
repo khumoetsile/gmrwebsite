@@ -1,4 +1,5 @@
 import { Globe } from "lucide-react";
+import { navigateToContactWithData, getDomainInquiryData } from "@/lib/contact-utils";
 
 export function DomainExtensionsSection() {
   const extensions = [
@@ -92,7 +93,10 @@ export function DomainExtensionsSection() {
               </p>
               
               <button 
-                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => {
+                  const inquiryData = getDomainInquiryData(ext.extension, ext.price);
+                  navigateToContactWithData(inquiryData.subject, inquiryData.message);
+                }}
                 className={`w-full py-2 px-4 rounded-lg font-semibold transition-colors ${
                   ext.popular 
                     ? "bg-primary hover:bg-primary/90 text-primary-foreground" 

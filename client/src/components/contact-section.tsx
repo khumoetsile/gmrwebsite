@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,53 @@ export function ContactSection() {
     subject: "",
     message: ""
   });
+
+  // Pre-fill form based on URL parameters and custom events
+  useEffect(() => {
+    const checkUrlParams = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const subject = urlParams.get('subject');
+      const message = urlParams.get('message');
+      
+      if (subject || message) {
+        setFormData(prev => ({
+          ...prev,
+          subject: subject || prev.subject,
+          message: message || prev.message
+        }));
+        
+        // Clear URL parameters after setting form data
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      }
+    };
+
+    // Handle custom prefill events (for immediate form filling)
+    const handlePrefillEvent = (event: CustomEvent) => {
+      const { subject, message } = event.detail;
+      if (subject || message) {
+        setFormData(prev => ({
+          ...prev,
+          subject: subject || prev.subject,
+          message: message || prev.message
+        }));
+      }
+    };
+
+    // Check URL parameters on mount (for page refresh scenarios)
+    checkUrlParams();
+
+    // Listen for custom prefill events
+    window.addEventListener('prefillContact', handlePrefillEvent as EventListener);
+
+    // Listen for popstate events (back/forward navigation)
+    window.addEventListener('popstate', checkUrlParams);
+
+    return () => {
+      window.removeEventListener('prefillContact', handlePrefillEvent as EventListener);
+      window.removeEventListener('popstate', checkUrlParams);
+    };
+  }, []);
   const { toast } = useToast();
 
   const contactInfo = [
@@ -184,15 +231,28 @@ export function ContactSection() {
                 
                 <div className="space-y-2">
                   <Label htmlFor="subject">Subject</Label>
-                  <Select onValueChange={(value) => handleInputChange("subject", value)} data-testid="select-subject">
+                  <Select 
+                    value={formData.subject} 
+                    onValueChange={(value) => handleInputChange("subject", value)} 
+                    data-testid="select-subject"
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a subject" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="domain">Domain Registration Inquiry</SelectItem>
-                      <SelectItem value="email">Custom Email Setup</SelectItem>
-                      <SelectItem value="support">Technical Support</SelectItem>
-                      <SelectItem value="general">General Question</SelectItem>
+                      <SelectItem value="Starter Package Inquiry">Starter Package Inquiry</SelectItem>
+                      <SelectItem value="Business Package Inquiry">Business Package Inquiry</SelectItem>
+                      <SelectItem value="Premium Package Inquiry">Premium Package Inquiry</SelectItem>
+                      <SelectItem value="Enterprise Plan Inquiry">Enterprise Plan Inquiry</SelectItem>
+                      <SelectItem value=".co.nz Domain Registration Inquiry">.co.nz Domain Registration Inquiry</SelectItem>
+                      <SelectItem value=".com Domain Registration Inquiry">.com Domain Registration Inquiry</SelectItem>
+                      <SelectItem value=".org Domain Registration Inquiry">.org Domain Registration Inquiry</SelectItem>
+                      <SelectItem value=".net Domain Registration Inquiry">.net Domain Registration Inquiry</SelectItem>
+                      <SelectItem value=".biz Domain Registration Inquiry">.biz Domain Registration Inquiry</SelectItem>
+                      <SelectItem value=".info Domain Registration Inquiry">.info Domain Registration Inquiry</SelectItem>
+                      <SelectItem value="Custom Email Setup">Custom Email Setup</SelectItem>
+                      <SelectItem value="Technical Support">Technical Support</SelectItem>
+                      <SelectItem value="General Question">General Question</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
