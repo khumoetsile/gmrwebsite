@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Mail, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -17,7 +19,6 @@ export function ContactSection() {
     subject: "",
     message: ""
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const contactInfo = [
@@ -45,30 +46,18 @@ export function ContactSection() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Basic validation
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
+  const contactMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      return await apiRequest("/api/contact", {
+        method: "POST",
+        body: data,
       });
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+    },
+    onSuccess: () => {
       toast({
         title: "Message Sent!",
         description: "Thank you for contacting us. We'll get back to you soon.",
       });
-
       // Reset form
       setFormData({
         firstName: "",
@@ -78,15 +67,30 @@ export function ContactSection() {
         subject: "",
         message: ""
       });
-    } catch (error) {
+    },
+    onError: (error: any) => {
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: error.message || "Failed to send message. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Basic validation
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
     }
+
+    contactMutation.mutate(formData);
   };
 
   return (
