@@ -4,9 +4,9 @@ export function HowItWorksSection() {
   const steps = [
     {
       icon: Search,
-      title: "Search Your Domain",
-      description: "Enter your desired domain name and check availability across multiple extensions including .co.nz, .com, .net and more.",
-      testId: "search-domain"
+      title: "Choose Your Domain",
+      description: "Tell us your desired domain name and we'll help you find the perfect extension including .co.nz, .com, .net and more.",
+      testId: "choose-domain"
     },
     {
       icon: UserCheck,

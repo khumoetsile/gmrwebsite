@@ -1,90 +1,51 @@
 export function Footer() {
-  const services = [
-    { name: "Domain Registration", href: "#" },
-    { name: "Custom Email", href: "#" },
-    { name: "DNS Management", href: "#" },
-    { name: "Enterprise Plans", href: "#" }
-  ];
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
-  const support = [
-    { name: "Documentation", href: "#" },
-    { name: "Help Center", href: "#" },
-    { name: "Contact Support", href: "#" },
-    { name: "System Status", href: "#" }
-  ];
-
-  const company = [
-    { name: "About Us", href: "#" },
-    { name: "Privacy Policy", href: "#" },
-    { name: "Terms of Service", href: "#" },
-    { name: "Blog", href: "#" }
+  const quickLinks = [
+    { name: "About", action: () => scrollToSection("about") },
+    { name: "Services", action: () => scrollToSection("services") },
+    { name: "Pricing", action: () => scrollToSection("pricing") },
+    { name: "Contact", action: () => scrollToSection("contact") }
   ];
 
   return (
     <footer className="bg-foreground text-background py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8">
-          <div className="col-span-2 md:col-span-1">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="md:col-span-2">
             <h3 className="text-2xl font-bold mb-4" data-testid="footer-logo">
               GMR Solutions
             </h3>
-            <p className="text-background/80 mb-4" data-testid="footer-description">
-              Your trusted partner for domain registration and custom email services in New Zealand.
+            <p className="text-background/80 mb-6" data-testid="footer-description">
+              Your trusted partner for domain registration and custom email services in New Zealand. 
+              Professional online presence made simple.
             </p>
+            <div className="text-background/80">
+              <p className="mb-2">📍 Based in New Zealand</p>
+              <p className="mb-2">📧 info@gmrsolutions.co.nz</p>
+              <p>☎ +64 (example number)</p>
+            </div>
           </div>
           
           <div>
-            <h4 className="text-lg font-semibold mb-4" data-testid="services-heading">
-              Services
+            <h4 className="text-lg font-semibold mb-4" data-testid="quick-links-heading">
+              Quick Links
             </h4>
             <ul className="space-y-2 text-background/80">
-              {services.map((service, index) => (
+              {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a 
-                    href={service.href} 
-                    className="hover:text-background transition-colors"
-                    data-testid={`footer-service-${index}`}
+                  <button 
+                    onClick={link.action}
+                    className="hover:text-background transition-colors text-left"
+                    data-testid={`footer-link-${index}`}
                   >
-                    {service.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="text-lg font-semibold mb-4" data-testid="support-heading">
-              Support
-            </h4>
-            <ul className="space-y-2 text-background/80">
-              {support.map((item, index) => (
-                <li key={index}>
-                  <a 
-                    href={item.href} 
-                    className="hover:text-background transition-colors"
-                    data-testid={`footer-support-${index}`}
-                  >
-                    {item.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="text-lg font-semibold mb-4" data-testid="company-heading">
-              Company
-            </h4>
-            <ul className="space-y-2 text-background/80">
-              {company.map((item, index) => (
-                <li key={index}>
-                  <a 
-                    href={item.href} 
-                    className="hover:text-background transition-colors"
-                    data-testid={`footer-company-${index}`}
-                  >
-                    {item.name}
-                  </a>
+                    {link.name}
+                  </button>
                 </li>
               ))}
             </ul>
